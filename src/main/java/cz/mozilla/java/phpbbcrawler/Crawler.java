@@ -42,6 +42,7 @@ public class Crawler {
                         .filter(href -> Stream.of("index.php", "viewforum.php", "viewtopic.php").parallel().anyMatch(href::contains))
                         .map(new RemoveFragment())
                         .map(new RemoveKeyFromQueryString("sid"))
+                        .map(new RemoveKeyFromQueryString("view"))
                         .filter(href -> !crawled.contains(href))
                         .sequential()
                         .forEach(toCrawl::offer);
