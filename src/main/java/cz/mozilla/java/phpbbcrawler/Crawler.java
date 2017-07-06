@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Crawler {
 
@@ -38,10 +39,7 @@ public class Crawler {
                 doc.select("a[href]").stream()
                         .map(a -> a.absUrl("href"))
                         .filter(new IsLinkToDomain(domain))
-                        .filter(href -> !href.contains("posting.php"))
-                        .filter(href -> !href.contains("memberlist.php"))
-                        .filter(href -> !href.contains("search.php"))
-                        .filter(href -> !href.contains("file.php"))
+                        .filter(href -> Stream.of("index.php", "viewforum.php", "viewtopic.php").parallel().anyMatch(href::contains))
                         .map(new RemoveFragment())
                         .map(new RemoveKeyFromQueryString("sid"))
                         .filter(href -> !crawled.contains(href))
